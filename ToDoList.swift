@@ -3,7 +3,7 @@ import Foundation
 @Observable
 class TodoList: Identifiable {
     let id = UUID()
-    let name: String
+    var name: String
     var tasks: [TaskItem]
     
     init(name: String, tasks: [TaskItem] = []) {
@@ -18,6 +18,6 @@ class TodoList: Identifiable {
 
 struct TaskItem: Identifiable {
     let id = UUID()
-    let name: String
+    var name: String
     var isCompleted: Bool = false
 }

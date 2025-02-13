@@ -3,7 +3,7 @@ import Foundation
 @Observable
 class Folder: Identifiable {
     let id = UUID()
-    let name: String
+    var name: String
     var subfolders: [Folder]
     var todoLists: [TodoList] // Each folder can contain multiple to-do lists
     
