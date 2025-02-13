@@ -4,6 +4,8 @@ struct FolderView: View {
     @Bindable var folder: Folder
     @State private var newFolderName = ""
     @State private var newTodoListName = ""
+    @State private var folderToEdit: Folder?
+    @State private var showRenameAlert = false
     
     var body: some View {
         List {
@@ -13,6 +15,21 @@ struct FolderView: View {
                     NavigationLink(destination: FolderView(folder: subfolder)) {
                         Image(systemName:"folder")
                         Text(subfolder.name)
+                            .onLongPressGesture(minimumDuration: 0.4) {
+                                {
+                                    Button(action: {
+                                        folderToEdit = subfolder
+                                        showRenameAlert = true
+                                    }) {
+                                        Label("Rename", systemImage: "pencil")
+                                    }
+                                    Button(role: .destructive) {
+                                        deleteFolderHold(subfolder)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                            }
                     }
                 }
                 .onDelete(perform: deleteFolder)
@@ -32,6 +49,13 @@ struct FolderView: View {
             }
         }
         .navigationTitle(folder.name)
+        .alert("Rename Folder", isPresented: $showRenameAlert) {
+            TextField("New Folder Name", text: bindingForFolderToEdit())
+            Button("Cancel", role: .cancel) {}
+            Button("Save") {
+                saveRename()
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 EditButton()
@@ -61,8 +85,29 @@ struct FolderView: View {
         folder.subfolders.remove(atOffsets: offsets)
     }
     
+    private func deleteFolderHold(_ subfolder: Folder) {
+        if let index = folder.subfolders.firstIndex(where: { $0.id == subfolder.id }) {
+            folder.subfolders.remove(at: index)
+        }
+    }
+    
     private func deleteTodoList(at offsets: IndexSet) {
         folder.todoLists.remove(atOffsets: offsets)
+    }
+    
+    private func bindingForFolderToEdit() -> Binding<String> {
+        guard let folderToEdit else { return .constant("") }
+        return Binding(
+            get: { folderToEdit.name },
+            set: { folderToEdit.name = $0 }
+        )
+    }
+    
+    private func saveRename() {
+        guard let folderToEdit else { return }
+        if let index = folder.subfolders.firstIndex(where: { $0.id == folderToEdit.id }) {
+            folder.subfolders[index].name = folderToEdit.name
+        }
     }
     
     /// Show Alert for Adding New Folder
