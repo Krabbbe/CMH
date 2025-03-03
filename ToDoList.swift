@@ -11,13 +11,16 @@ class TodoList: Identifiable {
         self.tasks = tasks
     }
     
-    func addTask(named name: String) {
-        tasks.append(TaskItem(name: name))
+    func addTask(named name: String, note: String, date: Date) {
+        tasks.append(TaskItem(name: name, note: note, date: date))
     }
 }
 
 struct TaskItem: Identifiable {
     let id = UUID()
     var name: String
+    var note: String
+    var date: Date
     var isCompleted: Bool = false
+    var dueDate: Date?
 }

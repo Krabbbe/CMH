@@ -15,18 +15,18 @@ struct FolderView: View {
                     NavigationLink(destination: FolderView(folder: subfolder)) {
                         Image(systemName:"folder")
                         Text(subfolder.name)
-                            .contextMenu {
-                                Button(action: {
-                                    folderToEdit = subfolder
-                                    showRenameAlert = true
-                                }) {
-                                    Label("Rename", systemImage: "pencil")
-                                }
-                                Button(role: .destructive) {
-                                    deleteFolderHold(subfolder)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
+                    }
+                    .contextMenu {
+                            Button(action: {
+                                folderToEdit = subfolder
+                                showRenameAlert = true
+                            }) {
+                                Label("Rename", systemImage: "pencil")
+                            }
+                            Button(role: .destructive) {
+                                deleteFolderHold(subfolder)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
                             }
                     }
                 }
